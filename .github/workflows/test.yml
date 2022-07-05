@@ -1,0 +1,14 @@
+name: ttt
+on:
+  push:
+    branches:
+      - poc/ttt # default branch name for each repo that docs should be push from
+env:
+  branch_map: '{"refs/heads/poc/ttt": "testing123", "refs/heads/develop": "staging"}'
+
+jobs:
+  ttt-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push to stream-chat-docusaurus
+        run: echo '${{ fromJSON(env.branch_map)[github.ref] }}'
