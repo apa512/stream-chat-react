@@ -21,6 +21,21 @@ jobs:
       - name: 🧪 tsc
         run: yarn types --noEmit
 
+  backwards-compatibility:
+    runs-on: ubuntu-latest
+    needs: 'tsc'
+    name: 🔁 Backwards compatibility
+    strategy:
+      matrix:
+        react: ['latest', '17', '16']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare for version ⚛️ React@${{ matrix.react }}
+        run: yarn --ignore-scripts && yarn add react@${{ matrix.react }} react-dom@${{ matrix.react }} @types/react@${{ matrix.react }} @types/react-dom@${{ matrix.react }} --ignore-scripts
+      - name: 🧪 Test types with tsc
+        if: always()
+        run: yarn types --noEmit --skipLibCheck
+
   e2e:
     runs-on: ubuntu-latest
     name: End-to-end tests
